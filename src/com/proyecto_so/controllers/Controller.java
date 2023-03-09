@@ -4,12 +4,13 @@
  */
 package com.proyecto_so.controllers;
 
+import com.proyecto_so.utils.Observer;
 
 
 /**
  *
  * @author el_fr
  */
-public interface Controller {
-    
+public interface Controller extends Observer{
+    void init();
 }

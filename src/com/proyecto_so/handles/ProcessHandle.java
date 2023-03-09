@@ -7,6 +7,8 @@ package com.proyecto_so.handles;
 import com.proyecto_so.bussines.Memory;
 import com.proyecto_so.bussines.Process;
 import com.proyecto_so.bussines.StateProcess;
+import com.proyecto_so.utils.Observable;
+import com.proyecto_so.utils.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,15 +18,17 @@ import java.util.logging.Logger;
  *
  * @author el_fr
  */
-public class ProcessHandle implements Runnable {
+public class ProcessHandle implements Runnable, Observable {
 
     private List<Process> processList;
     private List<Memory> memoryList;
+    private List<Observer> observers;
     private int iterations;
     private int iterationsDel;
 
     public ProcessHandle() {
         this.initLists();
+        this.observers = new ArrayList<>();
     }
 
     private void initLists() {
@@ -75,8 +79,10 @@ public class ProcessHandle implements Runnable {
     public void run() {
         this.iterations = 0;
         this.iterationsDel = 0;
-       
+        this.notifyObservers();
+        
         try {
+           
             while (!isFinish()) {
 
                 if (isFull()) {
@@ -89,10 +95,7 @@ public class ProcessHandle implements Runnable {
                 System.out.println("deleted Process: " + iterationsDel);
                 System.out.println("Added Prcoess: " + iterations);
 
-                // processList.forEach(System.out::println);
-                memoryList.forEach(System.out::println);
-
-                Thread.sleep(500);
+               
 
             }
 
@@ -106,7 +109,7 @@ public class ProcessHandle implements Runnable {
         int processInMemory = 0;
 
         for (Memory memory : memoryList) {
-            if (memory.getProcess()!= null) {
+            if (memory.getProcess() != null) {
                 processInMemory++;
             }
 
@@ -123,7 +126,7 @@ public class ProcessHandle implements Runnable {
         int processFinish = 0;
 
         for (Process process : processList) {
-            if (process.getState()==StateProcess.FINISHED) {
+            if (process.getState() == StateProcess.FINISHED) {
                 processFinish++;
             }
 
@@ -136,22 +139,24 @@ public class ProcessHandle implements Runnable {
         return false;
     }
 
-    public void addProcess() {
+    public void addProcess() throws InterruptedException {
         for (Process process : processList) {
             //Se busca si el process no se esta ejecutando para agregarlo
-            if (process.getState()==StateProcess.WAITING) {
+            if (process.getState() == StateProcess.WAITING) {
                 //Si el process no se esta ejecutando itera la memoryList 
                 for (Memory memory : memoryList) {
-                    if (memory.getProcess()== null) {
+                    if (memory.getProcess() == null) {
                         //si el process es menor o igual ala memoryList se agrega
                         if (process.getSize() <= memory.getSize()) {
                             process.setState(StateProcess.RUNNING);
                             process.setNumIn(iterations);
                             memory.setProcess(process);
-                            memory.setFragmentation(memory.getSize()- process.getSize());
+                            memory.setFragmentation(memory.getSize() - process.getSize());
                             memory.setTime(process.getTime());
                             this.iterations++;
-                            System.out.println("Process get in: " + memory.getBlock()+ " " + memory.getBlock());
+                            System.out.println("Process get in: Process Number:" + process.getNumProcess()+ " - Memory Block:" + memory.getBlock());
+                            this.notifyObservers();
+                             Thread.sleep(700);
                             break;
                         }
                     }
@@ -161,15 +166,18 @@ public class ProcessHandle implements Runnable {
         }
     }
 
-    public void removeProcess() {
+    public void removeProcess() throws InterruptedException {
         for (Memory memory : memoryList) {
-            if (memory.getProcess()!= null) {
+            if (memory.getProcess() != null) {
                 if (memory.getProcess().getNumIn() == iterationsDel) {
-                    if (memory.getProcess().getState()==StateProcess.RUNNING) {
+                    if (memory.getProcess().getState() == StateProcess.RUNNING) {
                         memory.getProcess().setState(StateProcess.FINISHED);
+                        memory.setFragmentation(memory.getSize());
                         System.out.println("Process left: " + memory);
                         memory.setProcess(null);
                         this.iterationsDel++;
+                        this.notifyObservers();
+                         Thread.sleep(700);
                         break;
                     }
                 }
@@ -178,4 +186,37 @@ public class ProcessHandle implements Runnable {
         }
     }
 
+    @Override
+    public void addObserver(Observer o) {
+        this.observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        this.observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        this.observers.forEach(e -> {
+            e.update();
+        });
+    }
+
+    public List<Process> getProcessList() {
+        return processList;
+    }
+
+    public void setProcessList(List<Process> processList) {
+        this.processList = processList;
+    }
+
+    public List<Memory> getMemoryList() {
+        return memoryList;
+    }
+
+    public void setMemoryList(List<Memory> memoryList) {
+        this.memoryList = memoryList;
+    }
+    
 }

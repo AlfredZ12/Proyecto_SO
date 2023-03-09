@@ -4,7 +4,10 @@
  */
 package com.proyecto_so.main;
 
+import com.proyecto_so.controllers.Controller;
+import com.proyecto_so.controllers.ProcessController;
 import com.proyecto_so.handles.ProcessHandle;
+import com.proyecto_so.views.ProcessView;
 import java.util.List;
 
 /**
@@ -14,9 +17,8 @@ import java.util.List;
 public class Main {
     
     public static void main(String[] args) throws InterruptedException{
-          ProcessHandle admin =  new ProcessHandle();
+    new ProcessController(new ProcessView());
           
-           admin.run();
            
     }
     
