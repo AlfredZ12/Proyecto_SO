@@ -15,13 +15,13 @@ public class Process {
 
     private int numProcess, time;
     private Integer size;
-    private String state;
+    private StateProcess state;
     private int numIn;
 
     public Process() {
     }
 
-    public Process(int numProcess, int time, Integer size, String state) {
+    public Process(int numProcess, int time, Integer size, StateProcess state) {
         this.numProcess = numProcess;
         this.time = time;
         this.size = size;
@@ -60,11 +60,11 @@ public class Process {
         this.size = size;
     }
 
-    public String getState() {
+    public StateProcess getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(StateProcess state) {
         this.state = state;
     }
 

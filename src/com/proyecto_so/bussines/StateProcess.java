@@ -9,5 +9,5 @@ package com.proyecto_so.bussines;
  * @author el_fr
  */
 public enum StateProcess {
-    
+    RUNNING,WAITING,FINISHED
 }

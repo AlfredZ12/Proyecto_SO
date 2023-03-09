@@ -6,6 +6,7 @@ package com.proyecto_so.handles;
 
 import com.proyecto_so.bussines.Memory;
 import com.proyecto_so.bussines.Process;
+import com.proyecto_so.bussines.StateProcess;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,31 +30,31 @@ public class ProcessHandle implements Runnable {
     private void initLists() {
         processList = new ArrayList<>();
         memoryList = new ArrayList<>();
-        processList.add(new Process(1, 30, 2890, "En Espera"));
-        processList.add(new Process(2, 54, 7340, "En Espera"));
-        processList.add(new Process(3, 30, 2890, "En Espera"));
-        processList.add(new Process(4, 34, 4200, "En Espera"));
-        processList.add(new Process(5, 25, 7200, "En Espera"));
-        processList.add(new Process(6, 33, 2500, "En Espera"));
-        processList.add(new Process(7, 9, 8900, "En Espera"));
-        processList.add(new Process(8, 26, 5000, "En Espera"));
-        processList.add(new Process(9, 10, 2550, "En Espera"));
-        processList.add(new Process(10, 56, 1120, "En Espera"));
-        processList.add(new Process(11, 17, 4270, "En Espera"));
-        processList.add(new Process(12, 19, 6540, "En Espera"));
-        processList.add(new Process(13, 54, 3500, "En Espera"));
-        processList.add(new Process(14, 8, 9400, "En Espera"));
-        processList.add(new Process(15, 12, 6300, "En Espera"));
-        processList.add(new Process(16, 28, 5900, "En Espera"));
-        processList.add(new Process(17, 21, 150, "En Espera"));
-        processList.add(new Process(18, 15, 330, "En Espera"));
-        processList.add(new Process(19, 24, 670, "En Espera"));
-        processList.add(new Process(20, 35, 5950, "En Espera"));
-        processList.add(new Process(21, 11, 2380, "En Espera"));
-        processList.add(new Process(22, 6, 7540, "En Espera"));
-        processList.add(new Process(23, 7, 6800, "En Espera"));
-        processList.add(new Process(24, 11, 2121, "En Espera"));
-        processList.add(new Process(25, 26, 4290, "En Espera"));
+        processList.add(new Process(1, 30, 2890, StateProcess.WAITING));
+        processList.add(new Process(2, 54, 7340, StateProcess.WAITING));
+        processList.add(new Process(3, 30, 2890, StateProcess.WAITING));
+        processList.add(new Process(4, 34, 4200, StateProcess.WAITING));
+        processList.add(new Process(5, 25, 7200, StateProcess.WAITING));
+        processList.add(new Process(6, 33, 2500, StateProcess.WAITING));
+        processList.add(new Process(7, 9, 8900, StateProcess.WAITING));
+        processList.add(new Process(8, 26, 5000, StateProcess.WAITING));
+        processList.add(new Process(9, 10, 2550, StateProcess.WAITING));
+        processList.add(new Process(10, 56, 1120, StateProcess.WAITING));
+        processList.add(new Process(11, 17, 4270, StateProcess.WAITING));
+        processList.add(new Process(12, 19, 6540, StateProcess.WAITING));
+        processList.add(new Process(13, 54, 3500, StateProcess.WAITING));
+        processList.add(new Process(14, 8, 9400, StateProcess.WAITING));
+        processList.add(new Process(15, 12, 6300, StateProcess.WAITING));
+        processList.add(new Process(16, 28, 5900, StateProcess.WAITING));
+        processList.add(new Process(17, 21, 150, StateProcess.WAITING));
+        processList.add(new Process(18, 15, 330, StateProcess.WAITING));
+        processList.add(new Process(19, 24, 670, StateProcess.WAITING));
+        processList.add(new Process(20, 35, 5950, StateProcess.WAITING));
+        processList.add(new Process(21, 11, 2380, StateProcess.WAITING));
+        processList.add(new Process(22, 6, 7540, StateProcess.WAITING));
+        processList.add(new Process(23, 7, 6800, StateProcess.WAITING));
+        processList.add(new Process(24, 11, 2121, StateProcess.WAITING));
+        processList.add(new Process(25, 26, 4290, StateProcess.WAITING));
 
         //Fragmentos de la memoryList
         memoryList.add(new Memory(1, 3800));
@@ -122,7 +123,7 @@ public class ProcessHandle implements Runnable {
         int processFinish = 0;
 
         for (Process process : processList) {
-            if (process.getState().equalsIgnoreCase("Terminado")) {
+            if (process.getState()==StateProcess.FINISHED) {
                 processFinish++;
             }
 
@@ -138,13 +139,13 @@ public class ProcessHandle implements Runnable {
     public void addProcess() {
         for (Process process : processList) {
             //Se busca si el process no se esta ejecutando para agregarlo
-            if (process.getState().equalsIgnoreCase("En espera")) {
+            if (process.getState()==StateProcess.WAITING) {
                 //Si el process no se esta ejecutando itera la memoryList 
                 for (Memory memory : memoryList) {
                     if (memory.getProcess()== null) {
                         //si el process es menor o igual ala memoryList se agrega
                         if (process.getSize() <= memory.getSize()) {
-                            process.setState("Ejecutando");
+                            process.setState(StateProcess.RUNNING);
                             process.setNumIn(iterations);
                             memory.setProcess(process);
                             memory.setFragmentation(memory.getSize()- process.getSize());
@@ -164,8 +165,8 @@ public class ProcessHandle implements Runnable {
         for (Memory memory : memoryList) {
             if (memory.getProcess()!= null) {
                 if (memory.getProcess().getNumIn() == iterationsDel) {
-                    if (memory.getProcess().getState().equalsIgnoreCase("Ejecutando")) {
-                        memory.getProcess().setState("Terminado");
+                    if (memory.getProcess().getState()==StateProcess.RUNNING) {
+                        memory.getProcess().setState(StateProcess.FINISHED);
                         System.out.println("Process left: " + memory);
                         memory.setProcess(null);
                         this.iterationsDel++;
