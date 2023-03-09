@@ -69,22 +69,17 @@ public class Memoria {
     public void setFragmentacion(Integer fragmentacion) {
         this.fragmentacion = fragmentacion;
     }
-    
+
     @Override
     public String toString() {
-        String str1 = String.format("%s","Bloque: " + bloque);
-        String str3 = String.format("%d", tamanio);
-        if(proceso!=null){
-        String str2 = String.format("%s", " Proceso: " + proceso.getNumero_tarea());
-        String str4 = String.format("%d", proceso.getTiempo());
-        String str5 = String.format("%d", fragmentacion);
-        return str1 + " " + " tamanio: "   + str3 + str2 +" Tiempo: " +str4 + " Fragmentacion: "+ str5;
+        if(this.getProceso()!=null){
+                    return "Memoria{" + "bloque=" + bloque + ", tamanio=" + tamanio + ", proceso=" + proceso + ", tiempo=" + tiempo + ", fragmentacion=" + fragmentacion + '}';
+
+        }else{
+                    return "Memoria{" + "bloque=" + bloque + ", tamanio=" + tamanio + ", proceso: N "  + ", tiempo=" + tiempo + ", fragmentacion=" + fragmentacion + '}';
+
         }
-        
-        
-        return str1 +   " tamanio: " + str3 + " Proceso: - "+ "Tiempo: -" + " Fragmentacion: -";
-       
-        
     }
+  
          
 }

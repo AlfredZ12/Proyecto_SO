@@ -12,7 +12,8 @@ import java.util.Objects;
  * @author Admin
  */
 public class Proceso {
-    private int numero_tarea,tiempo;
+
+    private int numero_tarea, tiempo;
     private Integer tamanio;
     private String estado;
     private int entrada;
@@ -103,24 +104,24 @@ public class Proceso {
         }
         return true;
     }
-    
-   
-    
-    
-    
+
+    public static final String YELLOW = "\033[0;33m";
+    public static final String A = "\033[0;35m";
+    public static final String B = "\033[0;36m";
+    public static final String RESET = "\033[0m";
 
     @Override
     public String toString() {
-        return "Proceso: [" + "numero:" + numero_tarea + " Tiempo:" + tiempo + " Tamanio:" + tamanio + " Estado: " + estado + ']';
+        if (estado.equalsIgnoreCase("En espera")) {
+            return "Proceso: [" + "numero:" + numero_tarea + " Tiempo:" + tiempo + "Tamanio:" + tamanio + YELLOW + " Estado: " + estado + RESET + ']';
+
+        } else if (estado.equalsIgnoreCase("Ejecutando")) {
+            return "Proceso: [" + "numero:" + numero_tarea + " Tiempo:" + tiempo + "Tamanio:" + tamanio + A + " Estado: " + estado + RESET + ']';
+
+        } else {
+            return "Proceso: [" + "numero:" + numero_tarea + " Tiempo:" + tiempo + "Tamanio:" + tamanio + B+ " Estado: " + estado + RESET+']';
+        }
+
     }
-    
-    
-    
-    
-    
- 
-            
-    
+
 }
-
-
