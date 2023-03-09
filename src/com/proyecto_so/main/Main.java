@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package proyecto_so;
+package com.proyecto_so.main;
 
+import com.proyecto_so.handles.ProcessHandle;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
 public class Main {
     
     public static void main(String[] args) throws InterruptedException{
-          AdminProcesos admin =  new AdminProcesos();
+          ProcessHandle admin =  new ProcessHandle();
           
            admin.run();
            
